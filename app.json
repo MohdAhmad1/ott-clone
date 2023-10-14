@@ -30,6 +30,9 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "mohdahmad_ott_clone_proj"
+    "scheme": "mohdahmad_ott_clone_proj",
+    "experiments": {
+      "tsconfigPaths": true
+    }
   }
 }

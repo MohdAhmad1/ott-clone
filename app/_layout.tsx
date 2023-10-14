@@ -10,7 +10,7 @@ export default function _Layout({}: Props) {
     <View style={styles.background}>
       <StatusBar style="auto" />
 
-      <View>
+      <View style={{ flex: 1 }}>
         <Slot />
       </View>
     </View>
@@ -22,5 +22,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     color: "#fff",
+    // padding: 10,
   },
 });
