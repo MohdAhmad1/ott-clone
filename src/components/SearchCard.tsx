@@ -9,7 +9,7 @@ const Favorites = (props: MovieProps) => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push("/movie-detail" + props.id);
+    router.push("/movie-detail/" + props.id);
   };
 
   return (
@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
   img: {
     width: width * 0.43,
     height: 250,
-    resizeMode: "contain",
+    resizeMode: "cover",
+    borderRadius: 20,
   },
   title: {
     fontSize: 14,

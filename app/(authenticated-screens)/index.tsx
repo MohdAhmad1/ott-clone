@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get("screen");
 
 function Home() {
   const popularMoviesQuery = useFetch<IMovieApiResponse>(
-    "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+    "https://api.themoviedb.org/3/trending/movie/day?language=en-US"
   );
 
   const upcomingMoviesQuery = useFetch<IMovieApiResponse>(

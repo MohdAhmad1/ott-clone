@@ -1,4 +1,5 @@
 import baseTheme from "@/theme/base-theme";
+import { useRouter } from "expo-router";
 import { Block, Button, Text } from "galio-framework";
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
@@ -9,8 +10,10 @@ const { width, height } = Dimensions.get("screen");
 interface MovieSliderProps extends MovieProps {}
 
 export default function MovieSlider(props: MovieSliderProps) {
+  const router = useRouter();
+
   const handlePress = () => {
-    // navigation.navigate('Plain', { screen: 'MovieDetail' })
+    router.push("/movie-detail/" + props.id);
   };
 
   return (

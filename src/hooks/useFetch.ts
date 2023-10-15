@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 
 const cache = new Map();
 
@@ -12,7 +12,9 @@ interface State<TState, TError> {
 
 export default function useFetch<TState, TError = AxiosError>(
   url: string,
-  options?: { initialState: TState },
+  options: { initialState?: TState; fetchOnMount: boolean } = {
+    fetchOnMount: true,
+  },
   customDependencyArray: unknown[] = []
 ) {
   const [state, setState] = useState<State<TState, TError>>({
@@ -55,12 +57,14 @@ export default function useFetch<TState, TError = AxiosError>(
     }));
   }, [url, ...customDependencyArray]);
 
-  useEffect(() => {
-    if (!!state.data) {
-      setState((prev) => ({ ...prev, isLoading: true }));
-    }
+  useLayoutEffect(() => {
+    if (options?.fetchOnMount === true) {
+      if (!!state.data) {
+        setState((prev) => ({ ...prev, isLoading: true }));
+      }
 
-    refetch();
+      refetch();
+    }
   }, [url, ...customDependencyArray]);
 
   return {

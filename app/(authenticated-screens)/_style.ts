@@ -94,6 +94,7 @@ export default StyleSheet.create({
     paddingRight: 40,
     paddingLeft: 16,
     marginBottom: 16,
+    color: "#fff",
   },
   button: {
     width: width * 0.3,
