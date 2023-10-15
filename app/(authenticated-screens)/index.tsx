@@ -1,33 +1,14 @@
 import Movie from "@/components/Movie";
 import MovieSlider from "@/components/MovieSlider";
-import { useRouter } from "expo-router";
-import { Block, Text } from "galio-framework";
-import { Dimensions, ScrollView, StatusBar } from "react-native";
-import styles from "./_style";
+import Spinner from "@/components/Spinner";
 import useFetch from "@/hooks/useFetch";
 import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
-import { CONSTANTS } from "@/Constants";
+import { getTMDBImage } from "@/utils";
+import { Block, Text } from "galio-framework";
 import { useMemo } from "react";
-import Spinner from "@/components/Spinner";
+import { Dimensions, ScrollView, StatusBar } from "react-native";
+import styles from "./_style";
 const { width, height } = Dimensions.get("screen");
-
-const moviess = [
-  {
-    user: "John Wick",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-  {
-    user: "John Wick: Chapter 4",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-  {
-    user: "John Wick: Chapter 4",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-];
 
 function Home() {
   const popularMoviesQuery = useFetch<IMovieApiResponse>(
@@ -142,9 +123,7 @@ function Home() {
                   <MovieSlider
                     key={i}
                     name={movie.title}
-                    thumbnail={{
-                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
-                    }}
+                    thumbnail={getTMDBImage(movie.poster_path)}
                     id={movie.id}
                   />
                 ))}
@@ -167,9 +146,7 @@ function Home() {
                   <Movie
                     key={movie.id}
                     name={movie.title}
-                    thumbnail={{
-                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
-                    }}
+                    thumbnail={getTMDBImage(movie.poster_path)}
                     id={movie.id}
                   />
                 ))}
@@ -192,9 +169,7 @@ function Home() {
                   <Movie
                     key={movie.id}
                     name={movie.title}
-                    thumbnail={{
-                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
-                    }}
+                    thumbnail={getTMDBImage(movie.poster_path)}
                     id={movie.id}
                   />
                 ))}

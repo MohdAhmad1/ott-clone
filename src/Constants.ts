@@ -1,3 +1,4 @@
-export const CONSTANTS = {
-  tmdbApiImgBaseURL: "https://image.tmdb.org/t/p/original",
-};
+export enum CONSTANTS {
+  tmdbApiImgBaseURL = "https://image.tmdb.org/t/p/original",
+  dummyProfilePicURL = "https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png",
+}

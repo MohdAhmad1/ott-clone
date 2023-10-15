@@ -7,32 +7,21 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import styles from "./_style";
-const { width, height } = Dimensions.get("screen");
-
+import styles from "../_style";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Icon from "react-native-vector-icons/Ionicons";
 import baseTheme from "@/theme/base-theme";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import useFetch from "@/hooks/useFetch";
+import { IMovieDetailsApiResponse } from "@/intrfaces/MovieDetailsApiResponse";
+import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
+import { getTMDBImage } from "@/utils";
+import { IMovieCastAPIResponse } from "@/intrfaces/IMovieCastApiResponse";
+import dayjs from "dayjs";
+import { useMemo } from "react";
 
-const moviess = [
-  {
-    user: "John Wick",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-  {
-    user: "John Wick: Chapter 4",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-  {
-    user: "John Wick: Chapter 4",
-    img: require("@assets/adaptive-icon.png"),
-    chapter: "Chapter 04",
-  },
-];
+const { width, height } = Dimensions.get("screen");
 
 const casts = [
   {
@@ -59,6 +48,28 @@ const casts = [
 
 function MovieDetail() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  const movieDetailsQuery = useFetch<IMovieDetailsApiResponse>(
+    `https://api.themoviedb.org/3/movie/${params.id}?language=en-US`
+  );
+
+  const movieCastQuery = useFetch<IMovieCastAPIResponse>(
+    `https://api.themoviedb.org/3/movie/${params.id}/credits?language=en-US`
+  );
+
+  const similarMoviesQuery = useFetch<IMovieApiResponse>(
+    `https://api.themoviedb.org/3/movie/${params.id}/similar?language=en-US&page=1`
+  );
+
+  const movietime = useMemo(() => {
+    let totalTime = movieDetailsQuery.data?.runtime ?? 0;
+
+    const hours = Math.floor(totalTime / 60);
+    const mins = totalTime - hours * 60;
+
+    return `${hours}hr ${mins}m`;
+  }, [movieDetailsQuery.data?.runtime]);
 
   return (
     <Block style={styles.container}>
@@ -95,14 +106,16 @@ function MovieDetail() {
               </Block>
             </TouchableOpacity>
           </Block>
+
           <Block width={width * 0.9} style={{ marginTop: 0 }}>
             <Text
               style={{ fontWeight: "400", lineHeight: 32 }}
               color="white"
               size={24}
             >
-              John Wick: Chapter 4
+              {movieDetailsQuery.data?.title}
             </Text>
+
             <Block
               width={width * 0.9}
               row
@@ -115,10 +128,11 @@ function MovieDetail() {
                 color="white"
                 size={12}
               >
-                2h 50m
+                {movietime}
               </Text>
             </Block>
           </Block>
+
           <Block
             style={{ marginVertical: 12, alignItems: "center" }}
             row
@@ -148,6 +162,7 @@ function MovieDetail() {
                 Download
               </Text>
             </Block>
+
             <Block
               row
               center
@@ -168,6 +183,7 @@ function MovieDetail() {
               </Text>
             </Block>
           </Block>
+
           <Block
             width={width * 0.9}
             style={{
@@ -182,48 +198,25 @@ function MovieDetail() {
             center
             width={width * 0.9}
           >
-            <Block
-              style={{
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: "#888",
-                paddingHorizontal: 12,
-                paddingVertical: 5,
-                marginRight: 8,
-              }}
-            >
-              <Text size={10} color="#fff" style={{ fontWeight: "400" }}>
-                Action
-              </Text>
-            </Block>
-            <Block
-              style={{
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: "#888",
-                paddingHorizontal: 12,
-                paddingVertical: 5,
-                marginRight: 8,
-              }}
-            >
-              <Text size={10} color="#fff" style={{ fontWeight: "400" }}>
-                Thriller
-              </Text>
-            </Block>
-            <Block
-              style={{
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: "#888",
-                paddingHorizontal: 12,
-                paddingVertical: 5,
-                marginRight: 8,
-              }}
-            >
-              <Text size={10} color="#fff" style={{ fontWeight: "400" }}>
-                Crime
-              </Text>
-            </Block>
+            {movieDetailsQuery.data?.genres?.map((genre) => {
+              return (
+                <Block
+                  key={genre.id}
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    borderColor: "#888",
+                    paddingHorizontal: 12,
+                    paddingVertical: 5,
+                    marginRight: 8,
+                  }}
+                >
+                  <Text size={10} color="#fff" style={{ fontWeight: "400" }}>
+                    {genre.name}
+                  </Text>
+                </Block>
+              );
+            })}
           </Block>
 
           <Block width={width * 0.9}>
@@ -234,14 +227,17 @@ function MovieDetail() {
                 color="white"
                 size={12}
               >
-                8.0 (1,024)
+                {Math.floor(movieDetailsQuery.data?.vote_average ?? 0)} (
+                {movieDetailsQuery.data?.vote_count})
               </Text>
               <Text
                 style={{ fontWeight: "500", lineHeight: 18, marginLeft: 16 }}
                 color="white"
                 size={12}
               >
-                24 March 2023
+                {dayjs(movieDetailsQuery.data?.release_date).format(
+                  "MMM DD YYYY"
+                )}
               </Text>
             </Block>
             <Text
@@ -249,11 +245,7 @@ function MovieDetail() {
               style={{ fontWeight: "300", lineHeight: 18, marginTop: 16 }}
               color="white"
             >
-              With the price on his head ever increasing, John Wick uncovers a
-              path to defeating The High Table. But before he can earn his
-              freedom, Wick must face off against a new enemy with powerful
-              alliances across the globe and forces that turn old friends into
-              foes.
+              {movieDetailsQuery.data?.overview}
             </Text>
           </Block>
           <Block width={width * 0.9} style={{ marginTop: 16 }}>
@@ -261,8 +253,15 @@ function MovieDetail() {
               <Text style={styles.title}>Top Cast</Text>
             </Block>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {casts.map((cast, i) => (
-                <Cast key={i} name={cast.user} thumbnail={cast.img} id={"si"} />
+              {movieCastQuery?.data?.cast.map((cast, i) => (
+                <Cast
+                  key={i}
+                  name={cast.name}
+                  thumbnail={
+                    cast.profile_path ? getTMDBImage(cast.profile_path) : null
+                  }
+                  id={"si"}
+                />
               ))}
             </ScrollView>
           </Block>
@@ -271,15 +270,24 @@ function MovieDetail() {
             <Block>
               <Text style={styles.title}>More like This</Text>
             </Block>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {moviess.map((movie, i) => (
-                <Movie key={i} name={movie.user} thumbnail={movie.img} id="l" />
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 20 }}
+            >
+              {similarMoviesQuery?.data?.results?.map((movie, i) => (
+                <Movie
+                  key={movie.id}
+                  name={movie.title}
+                  thumbnail={getTMDBImage(movie.poster_path)}
+                  id={movie.id}
+                />
               ))}
             </ScrollView>
           </Block>
         </Block>
       </ScrollView>
-      {/* {isLoading && <SpinnerOverlay message={'Fetching Posts...'} />} */}
     </Block>
   );
 }
