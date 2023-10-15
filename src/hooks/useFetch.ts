@@ -32,18 +32,21 @@ export default function useFetch<TState, TError = AxiosError>(
 
     let error: AxiosError | null = null;
 
-    const data = await axios
-      .get(url, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDhmMGEzMmFhYTEyYmI2YWVkNTc5YTVmMTViZTkyNyIsInN1YiI6IjY1MmJhZGZjZWE4NGM3MDEyZDcwMWYyYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.FpZaMIQU5drg1vVsdXImHu7PJufpdsLE-hGK4jVA05Q",
-        },
-      })
-      .then((resp) => resp.data)
-      .catch((err) => {
-        error = err;
-        return null;
-      });
+    let data = cache.get(url);
+
+    if (!data)
+      data = await axios
+        .get(url, {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDhmMGEzMmFhYTEyYmI2YWVkNTc5YTVmMTViZTkyNyIsInN1YiI6IjY1MmJhZGZjZWE4NGM3MDEyZDcwMWYyYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.FpZaMIQU5drg1vVsdXImHu7PJufpdsLE-hGK4jVA05Q",
+          },
+        })
+        .then((resp) => resp.data)
+        .catch((err) => {
+          error = err;
+          return null;
+        });
 
     if (data) {
       cache.set(url, data);
@@ -65,6 +68,10 @@ export default function useFetch<TState, TError = AxiosError>(
 
       refetch();
     }
+
+    return () => {
+      setState((prev) => ({ ...prev, data: null }));
+    };
   }, [url, ...customDependencyArray]);
 
   return {

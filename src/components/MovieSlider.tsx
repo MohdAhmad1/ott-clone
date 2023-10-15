@@ -2,7 +2,7 @@ import baseTheme from "@/theme/base-theme";
 import { useRouter } from "expo-router";
 import { Block, Button, Text } from "galio-framework";
 import React from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { MovieProps } from "./Movie";
 const { width, height } = Dimensions.get("screen");
@@ -17,33 +17,35 @@ export default function MovieSlider(props: MovieSliderProps) {
   };
 
   return (
-    <Block>
-      <Image source={props.thumbnail} style={styles.img} />
-      <Block
-        width={width * 0.8}
-        space="between"
-        row
-        center
-        style={{ padding: 8 }}
-      >
-        <Text numberOfLines={1} style={styles.title}>
-          {props.name}
-        </Text>
+    <TouchableOpacity onPress={handlePress}>
+      <Block>
+        <Image source={props.thumbnail} style={styles.img} />
+        <Block
+          width={width * 0.8}
+          space="between"
+          row
+          center
+          style={{ padding: 8 }}
+        >
+          <Text numberOfLines={1} style={styles.title}>
+            {props.name}
+          </Text>
 
-        <Block center>
-          <Button
-            onPress={handlePress}
-            style={styles.button}
-            color={baseTheme.COLORS.PRIMARY}
-          >
-            <Ionicons size={18} color={"#fff"} name="play-circle-outline" />
-            <Text size={12} color="#fff">
-              Watch Later
-            </Text>
-          </Button>
+          <Block center>
+            <Button
+              onPress={handlePress}
+              style={styles.button}
+              color={baseTheme.COLORS.PRIMARY}
+            >
+              <Ionicons size={18} color={"#fff"} name="play-circle-outline" />
+              <Text size={12} color="#fff">
+                Watch Later
+              </Text>
+            </Button>
+          </Block>
         </Block>
       </Block>
-    </Block>
+    </TouchableOpacity>
   );
 }
 
