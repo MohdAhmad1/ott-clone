@@ -6,7 +6,7 @@ import { Image, StyleSheet, TouchableOpacity } from "react-native";
 export interface MovieProps {
   name: string;
   thumbnail: { uri: string };
-  id: string;
+  id: string | number;
 }
 
 export default function Movie({ name, thumbnail, id }: MovieProps) {
@@ -18,9 +18,11 @@ export default function Movie({ name, thumbnail, id }: MovieProps) {
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <Block>
+      <Block width={133}>
         <Image source={thumbnail} style={styles.img} />
-        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.title} numberOfLines={1}>
+          {name}
+        </Text>
       </Block>
     </TouchableOpacity>
   );
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "contain",
     marginRight: 24,
+    borderRadius: 12,
   },
   title: {
     fontSize: 14,

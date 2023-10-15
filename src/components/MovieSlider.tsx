@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import baseTheme from "@/theme/base-theme";
+import { Block, Button, Text } from "galio-framework";
+import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
-import { Block, Text, theme, Button } from "galio-framework";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { MovieProps } from "./Movie";
-import baseTheme from "@/theme/base-theme";
 const { width, height } = Dimensions.get("screen");
 
-interface MovieSliderProps extends MovieProps {
-  chapter: string;
-}
+interface MovieSliderProps extends MovieProps {}
 
 export default function MovieSlider(props: MovieSliderProps) {
   const handlePress = () => {
@@ -25,10 +23,9 @@ export default function MovieSlider(props: MovieSliderProps) {
         center
         style={{ padding: 8 }}
       >
-        <Block>
-          <Text style={styles.title}>{props.name}</Text>
-          <Text style={styles.chapter}>{props.chapter}</Text>
-        </Block>
+        <Text numberOfLines={1} style={styles.title}>
+          {props.name}
+        </Text>
 
         <Block center>
           <Button
@@ -52,6 +49,7 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     height: 449,
     resizeMode: "contain",
+    borderRadius: 20,
   },
   title: {
     fontSize: 14,

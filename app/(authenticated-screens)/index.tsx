@@ -4,6 +4,11 @@ import { useRouter } from "expo-router";
 import { Block, Text } from "galio-framework";
 import { Dimensions, ScrollView, StatusBar } from "react-native";
 import styles from "./_style";
+import useFetch from "@/hooks/useFetch";
+import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
+import { CONSTANTS } from "@/Constants";
+import { useMemo } from "react";
+import Spinner from "@/components/Spinner";
 const { width, height } = Dimensions.get("screen");
 
 const moviess = [
@@ -25,7 +30,17 @@ const moviess = [
 ];
 
 function Home() {
-  const router = useRouter();
+  const popularMoviesQuery = useFetch<IMovieApiResponse>(
+    "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+  );
+
+  const upcomingMoviesQuery = useFetch<IMovieApiResponse>(
+    "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"
+  );
+
+  const nowPlayingMovies = useMemo(() => {
+    return popularMoviesQuery.data?.results.splice(0, 5) ?? [];
+  }, [popularMoviesQuery.data]);
 
   return (
     <Block style={styles.container}>
@@ -117,43 +132,74 @@ function Home() {
               <Text style={styles.title}>Now Playing</Text>
             </Block>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 20 }}
-            >
-              {moviess.map((movie, i) => (
-                <MovieSlider
-                  key={i}
-                  name={movie.user}
-                  thumbnail={movie.img}
-                  chapter={movie.chapter}
-                  id="Hola"
-                />
-              ))}
-            </ScrollView>
+            <Spinner active={popularMoviesQuery.isLoading}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 20 }}
+              >
+                {nowPlayingMovies.map((movie, i) => (
+                  <MovieSlider
+                    key={i}
+                    name={movie.title}
+                    thumbnail={{
+                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
+                    }}
+                    id={movie.id}
+                  />
+                ))}
+              </ScrollView>
+            </Spinner>
           </Block>
 
           <Block width={width * 0.9} style={{ marginVertical: 16 }}>
             <Block>
               <Text style={styles.title}>Popular</Text>
             </Block>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {moviess.map((movie, i) => (
-                <Movie key={i} name={movie.user} thumbnail={movie.img} id="i" />
-              ))}
-            </ScrollView>
+
+            <Spinner active={popularMoviesQuery.isLoading}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 20 }}
+              >
+                {popularMoviesQuery.data?.results?.map((movie, i) => (
+                  <Movie
+                    key={movie.id}
+                    name={movie.title}
+                    thumbnail={{
+                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
+                    }}
+                    id={movie.id}
+                  />
+                ))}
+              </ScrollView>
+            </Spinner>
           </Block>
 
           <Block width={width * 0.9} style={{ marginVertical: 16 }}>
             <Block>
               <Text style={styles.title}>Upcoming</Text>
             </Block>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {moviess.map((movie, i) => (
-                <Movie key={i} name={movie.user} thumbnail={movie.img} id="i" />
-              ))}
-            </ScrollView>
+
+            <Spinner active={upcomingMoviesQuery.isLoading}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 20 }}
+              >
+                {upcomingMoviesQuery.data?.results?.map((movie, i) => (
+                  <Movie
+                    key={movie.id}
+                    name={movie.title}
+                    thumbnail={{
+                      uri: CONSTANTS.tmdbApiImgBaseURL + movie.poster_path,
+                    }}
+                    id={movie.id}
+                  />
+                ))}
+              </ScrollView>
+            </Spinner>
           </Block>
         </Block>
       </ScrollView>
