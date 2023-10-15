@@ -1,15 +1,15 @@
 import { Input } from "@/components/Input";
-import baseTheme from "@/theme/base-theme";
 import { Block, Button, Text } from "galio-framework";
 import React, { useState } from "react";
 import { Dimensions, TouchableOpacity } from "react-native";
 import styles from "./_style";
+import baseTheme from "@/theme/base-theme";
 import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("screen");
 
-function Login() {
-  const [login, setLogin] = useState(false);
+function Register() {
+  const [showSpinner, setShowSpinner] = useState(false);
   const router = useRouter();
 
   return (
@@ -18,15 +18,24 @@ function Login() {
         <Block style={{ alignSelf: "center", marginTop: 0 }}>
           <Text
             style={{
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: "500",
               lineHeight: 28,
               color: "#fff",
-              marginBottom: 20,
+              marginBottom: 16,
             }}
           >
-            Login
+            Sign Up
           </Text>
+        </Block>
+        <Block
+          style={{ position: "relative", marginBottom: 16 }}
+          width={width * 0.9}
+        >
+          <Text style={styles.floatingText} color="white">
+            Name
+          </Text>
+          <Input placeholder="Enter your Name" />
         </Block>
         <Block
           style={{ position: "relative", marginBottom: 16 }}
@@ -44,8 +53,19 @@ function Login() {
           <Text style={styles.floatingText} color="white">
             Password
           </Text>
-
           <Input secureTextEntry={true} placeholder="Enter your Password" />
+        </Block>
+        <Block
+          style={{ position: "relative", marginBottom: 16 }}
+          width={width * 0.9}
+        >
+          <Text style={styles.floatingText} color="white">
+            Confirm Password
+          </Text>
+          <Input
+            secureTextEntry={true}
+            placeholder="Enter your  Confirm Password"
+          />
         </Block>
       </Block>
 
@@ -54,8 +74,7 @@ function Login() {
           style={styles.button}
           color={baseTheme.COLORS.PRIMARY}
           onPress={() => {
-            setLogin(true);
-            // navigation.navigate('HomeBase')
+            //   navigation.navigate('OtpScreen')
           }}
           textStyle={{
             color: baseTheme.COLORS.WHITE,
@@ -64,7 +83,7 @@ function Login() {
             lineHeight: 24,
           }}
         >
-          Log In
+          Sign Up
         </Button>
 
         <Block row center style={{ marginTop: 16 }}>
@@ -77,11 +96,11 @@ function Login() {
               textAlign: "center",
             }}
           >
-            Don't have an Account?
+            Already have an Account?
           </Text>
           <TouchableOpacity
             onPress={() => {
-              router.push("/auth/register");
+              router.push("/auth/login");
             }}
           >
             <Text
@@ -94,7 +113,7 @@ function Login() {
               }}
             >
               {" "}
-              Sign Up
+              Login
             </Text>
           </TouchableOpacity>
         </Block>
@@ -103,4 +122,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
