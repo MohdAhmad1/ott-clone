@@ -1,10 +1,34 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
-import { Tabs } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Tabs, useRouter } from "expo-router";
 import baseTheme from "@/theme/base-theme";
 import Icon from "react-native-vector-icons/Ionicons";
+import { auth } from "@/firebase";
+import Spinner from "@/components/Spinner";
 
 export default function _layout() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((data) => {
+      if (!data) {
+        return router.push("/auth/login");
+      }
+
+      setIsAuthenticated(true);
+    });
+  }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Spinner active />
+      </View>
+    );
+  }
+
   return (
     <Tabs
       screenOptions={{

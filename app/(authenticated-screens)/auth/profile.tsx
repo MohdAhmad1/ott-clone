@@ -6,11 +6,22 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import styles from "../_style";
+import { auth } from "@/firebase";
+import { useState } from "react";
 
 const { width, height } = Dimensions.get("screen");
 
 function Profile() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function logout() {
+    setIsLoading(true);
+    auth.signOut().then(() => {
+      router.push("/auth/login");
+    });
+    setIsLoading(false);
+  }
 
   return (
     <Block style={styles.container}>
@@ -180,6 +191,10 @@ function Profile() {
             fontSize: 16,
           }}
           style={styles.buttonOutline}
+          onPress={() => {
+            logout();
+          }}
+          loading={isLoading}
         >
           Logout
         </Button>
