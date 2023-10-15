@@ -6,8 +6,10 @@ import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
 import { getTMDBImage } from "@/utils";
 import { Block, Text } from "galio-framework";
 import { useMemo } from "react";
-import { Dimensions, ScrollView, StatusBar } from "react-native";
+import { Dimensions, ScrollView, StatusBar, Image } from "react-native";
 import styles from "./_style";
+import { CONSTANTS } from "@/Constants";
+
 const { width, height } = Dimensions.get("screen");
 
 function Home() {
@@ -33,7 +35,7 @@ function Home() {
         space="between"
         width={width * 0.9}
       >
-        {/* <Image source={Images.Re} style={styles.profile} /> */}
+        <Image source={CONSTANTS.logo} style={styles.profile} />
       </Block>
 
       <ScrollView
