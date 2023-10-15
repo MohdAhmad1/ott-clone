@@ -1,19 +1,24 @@
 import React from "react";
 import { Slot } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 type Props = {};
 
 export default function _Layout({}: Props) {
   return (
-    <View style={styles.background}>
-      <StatusBar style="auto" />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={styles.background}>
+        <StatusBar style="auto" />
 
-      <View style={{ flex: 1 }}>
-        <Slot />
+        <View style={{ flex: 1 }}>
+          <Slot />
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -23,5 +28,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     color: "#fff",
     // padding: 10,
+  },
+
+  container: {
+    backgroundColor: "#000",
+    flex: 1,
+    flexDirection: "column",
   },
 });
