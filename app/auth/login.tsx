@@ -102,7 +102,7 @@ function Login() {
           />
           {errors.email && (
             <Text color={baseTheme.COLORS.DANGER}>{errors.email}</Text>
-          )}{" "}
+          )}
         </Block>
 
         <Block

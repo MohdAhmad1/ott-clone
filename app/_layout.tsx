@@ -1,7 +1,7 @@
-import React from "react";
 import { Slot } from "expo-router";
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 
 type Props = {};
 
@@ -11,9 +11,9 @@ export default function _Layout({}: Props) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.background}>
-        <StatusBar style="auto" />
+      <StatusBar style="auto" />
 
+      <View style={styles.background}>
         <View style={{ flex: 1 }}>
           <Slot />
         </View>
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     color: "#fff",
+    paddingTop: 30,
     // padding: 10,
   },
 

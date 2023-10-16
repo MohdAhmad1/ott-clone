@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@/Constants";
 import Movie from "@/components/Movie";
 import MovieSlider from "@/components/MovieSlider";
 import Spinner from "@/components/Spinner";
@@ -6,9 +7,8 @@ import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
 import { getTMDBImage } from "@/utils";
 import { Block, Text } from "galio-framework";
 import { useMemo } from "react";
-import { Dimensions, ScrollView, StatusBar, Image } from "react-native";
+import { Dimensions, Image, ScrollView } from "react-native";
 import styles from "./_style";
-import { CONSTANTS } from "@/Constants";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -27,7 +27,6 @@ function Home() {
 
   return (
     <Block style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={"#f9f9f9"} />
       <Block
         style={{ marginVertical: 16, alignItems: "center" }}
         row

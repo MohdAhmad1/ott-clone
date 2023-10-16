@@ -1,28 +1,27 @@
 import Cast from "@/components/Cast";
 import Movie from "@/components/Movie";
+import Spinner from "@/components/Spinner";
+import useFetch from "@/hooks/useFetch";
+import { IMovieCastAPIResponse } from "@/intrfaces/IMovieCastApiResponse";
+import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
+import { IMovieDetailsApiResponse } from "@/intrfaces/MovieDetailsApiResponse";
+import baseTheme from "@/theme/base-theme";
+import { getTMDBImage } from "@/utils";
+import dayjs from "dayjs";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Block, Text } from "galio-framework";
+import { useMemo } from "react";
 import {
   Dimensions,
   ImageBackground,
   ScrollView,
-  StatusBar,
   TouchableOpacity,
   View,
 } from "react-native";
-import styles from "../_style";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Icon from "react-native-vector-icons/Ionicons";
-import baseTheme from "@/theme/base-theme";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import useFetch from "@/hooks/useFetch";
-import { IMovieDetailsApiResponse } from "@/intrfaces/MovieDetailsApiResponse";
-import { IMovieApiResponse } from "@/intrfaces/MovieApiResponse";
-import { getTMDBImage } from "@/utils";
-import { IMovieCastAPIResponse } from "@/intrfaces/IMovieCastApiResponse";
-import dayjs from "dayjs";
-import { useMemo } from "react";
-import Spinner from "@/components/Spinner";
+import styles from "../_style";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -76,8 +75,6 @@ function MovieDetail() {
 
   return (
     <Block style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={"#f9f9f9"} />
-
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
